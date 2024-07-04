@@ -32,7 +32,7 @@ html, body {
     justify-content: flex-end;
     align-items: end;
     margin: 20px;
-    flex: 1;
+    flex: 1.5;
 }
 
 #output {
