@@ -1,18 +1,23 @@
-// Output
+// TODO
+// Refactor for event bubbling?
+
 const output = document.querySelector("#output");
-// Delete buttons
 const clearBtn = document.querySelector("#clear-btn");
 const backspaceBtn = document.querySelector("#backspace-btn");
-// Operators
 const operators = document.querySelectorAll(".operators");
-// Numbers
 const numbers = document.querySelectorAll(".numbers");
-// Dot button
 const dotBtn = document.querySelector("#dot-btn");
+const equalBtn = document.querySelector("#equal-btn");
+// Stack to hold order of operation
+let stack = [];
+
+// FIX TRAILING 0
 
 // Event listener for clearing output
 clearBtn.addEventListener("click", () => {
+    outputIsEmpty = true;
     output.textContent = "0";
+    stack = [];
 });
 
 // Event listener for deleting digit in output
@@ -24,45 +29,67 @@ backspaceBtn.addEventListener("click", () => {
     }
 });
 
-let notPopulated = true;
-
-// Display respective number
+let outputIsEmpty = true;
 numbers.forEach(number => {
     number.addEventListener("click", () => {
-        if (notPopulated) {
+        if (outputIsEmpty) {
             output.textContent = "";
             output.textContent += number.textContent;
-            notPopulated = false;
+            outputIsEmpty = false;
         } else {
-            if (output.textContent.length !== 10) {
             output.textContent += number.textContent;
-            }
-        } 
+        }
     });
 });
 
-// Check that thing you were thinking about creating objects such as event listeners and query selectors affecting performance.
+let dotFlag = true;
+dotBtn.addEventListener("click", () => {
+    if (dotFlag) {
+        output.textContent += ".";
+        dotFlag = false;
+    }
+});
 
 operators.forEach(operator => {
-    operator.addEventListener("click", () => {
-        notPopulated = true;
+    operator.addEventListener("click", (e) => {
+        if (stack.length == 0) {
+            outputIsEmpty = true;
+            dotFlag = true;
+            stack.push(parseFloat(output.textContent));
+            stack.push(e.target.textContent);
+        } else {
+            stack.push(parseFloat(output.textContent));
+            stack[0] = operate(stack[0], stack[1], stack[2]);
+            output.textContent = stack[0];
+            stack[1] = e.target.textContent;
+            stack.pop();
+            outputIsEmpty = true;
+            dotFlag = true;    
+        }
     });
 });
 
-function operate(operator, a, b) {
+equalBtn.addEventListener("click", () => {
+    if (stack.length > 1) {
+        stack.push(parseFloat(output.textContent));
+        stack[0] = operate(stack[0], stack[1], stack[2]);
+        output.textContent = stack[0];
+        if (stack.length > 3) stack.pop();
+    }
+})
+
+function operate(a, operator, b) {
     switch (operator) {
-        case 'add':
+        case '+':
             return parseFloat(a) + parseFloat(b);
-        case 'subtract':
+        case '-':
             return parseFloat(a) - parseFloat(b);
-        case 'multiply':
+        case 'x':
             return parseFloat(a) * parseFloat(b);
-        case 'divide':
+        case '÷':
             if (parseFloat(b) === 0) return ('Cannot divide by zero');
             return parseFloat(a) / parseFloat(b);
         default:
             // throw new Error('Invalid operator: &{operation}');
     }
 }
-
-console.log(operate('/', 1, 1));

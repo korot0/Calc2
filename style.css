@@ -15,7 +15,7 @@ html, body {
 }
 
 #calculator {
-    height: 600px;
+    min-height: 600px;
     width: 450px;
     display: flex;
     margin: 80px auto;
