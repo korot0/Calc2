@@ -1,7 +1,6 @@
 /* TODO
     Keyboard support
-    Max display string
-    Pressing = before entering all of the numbers or an operator could cause problems!
+    Max display string and rounding
 */
 
 const output = document.querySelector("#output");
@@ -74,19 +73,19 @@ operators.forEach(operator => {
     });
 });
 
-function handleBigNum(num) {
-    (num < 99999999999) ? output.textContent = num : output.textContent = "Infinity";
-}
-
 equalBtn.addEventListener("click", () => {
     if (stack.length > 1) {
         stack.push(parseFloat(output.textContent));
         outputPrev.textContent = `${stack[0]} ${stack[1]} ${stack[2]} =`; 
         stack[0] = operate(stack[0], stack[1], stack[2]);
         handleBigNum(stack[0]);
-        if (stack.length > 3) stack.pop();
+        stack = [];
     }
-})
+});
+
+function handleBigNum(num) {
+    (num < 99999999999) ? output.textContent = num : output.textContent = "Infinity";
+}
 
 function operate(a, operator, b) {
     switch (operator) {
