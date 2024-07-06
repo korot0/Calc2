@@ -1,7 +1,11 @@
-// TODO
-// Refactor for event bubbling?
+/* TODO
+    Keyboard support
+    Max display string
+    Pressing = before entering all of the numbers or an operator could cause problems!
+*/
 
 const output = document.querySelector("#output");
+const outputPrev = document.querySelector("#output-preview");
 const clearBtn = document.querySelector("#clear-btn");
 const backspaceBtn = document.querySelector("#backspace-btn");
 const operators = document.querySelectorAll(".operators");
@@ -11,12 +15,11 @@ const equalBtn = document.querySelector("#equal-btn");
 // Stack to hold order of operation
 let stack = [];
 
-// FIX TRAILING 0
-
 // Event listener for clearing output
 clearBtn.addEventListener("click", () => {
     outputIsEmpty = true;
     output.textContent = "0";
+    outputPrev.textContent = "0";
     stack = [];
 });
 
@@ -57,23 +60,30 @@ operators.forEach(operator => {
             dotFlag = true;
             stack.push(parseFloat(output.textContent));
             stack.push(e.target.textContent);
+            outputPrev.textContent = `${stack[0]} ${stack[1]}`;
         } else {
             stack.push(parseFloat(output.textContent));
             stack[0] = operate(stack[0], stack[1], stack[2]);
-            output.textContent = stack[0];
+            handleBigNum(stack[0]);
             stack[1] = e.target.textContent;
             stack.pop();
             outputIsEmpty = true;
-            dotFlag = true;    
+            dotFlag = true;
+            outputPrev.textContent = `${stack[0]} ${stack[1]}`;    
         }
     });
 });
 
+function handleBigNum(num) {
+    (num < 99999999999) ? output.textContent = num : output.textContent = "Infinity";
+}
+
 equalBtn.addEventListener("click", () => {
     if (stack.length > 1) {
         stack.push(parseFloat(output.textContent));
+        outputPrev.textContent = `${stack[0]} ${stack[1]} ${stack[2]} =`; 
         stack[0] = operate(stack[0], stack[1], stack[2]);
-        output.textContent = stack[0];
+        handleBigNum(stack[0]);
         if (stack.length > 3) stack.pop();
     }
 })

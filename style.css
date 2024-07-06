@@ -29,14 +29,20 @@ html, body {
 
 #display {
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
+    justify-content: space-evenly;
     align-items: end;
-    margin: 20px;
     flex: 1.5;
 }
 
 #output {
     font-size: 65px;
+    margin-right: 12px;
+}
+
+#output-preview {
+    color: #888;
+    margin-right: 22px;
 }
 
 #clear-buttons, .row {
