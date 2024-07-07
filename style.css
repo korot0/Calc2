@@ -30,9 +30,9 @@ html, body {
 #display {
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: end;
     align-items: end;
-    flex: 1.5;
+    height: 110px;
 }
 
 #output {

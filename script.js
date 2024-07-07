@@ -1,6 +1,6 @@
 /* TODO
     Keyboard support
-    Max display string and rounding
+    Max display num and rounding
 */
 
 const output = document.querySelector("#output");
@@ -11,23 +11,24 @@ const operators = document.querySelectorAll(".operators");
 const numbers = document.querySelectorAll(".numbers");
 const dotBtn = document.querySelector("#dot-btn");
 const equalBtn = document.querySelector("#equal-btn");
-// Stack to hold order of operation
-let stack = [];
+// expression to hold order of operation
+let expression = [];
 
 // Event listener for clearing output
 clearBtn.addEventListener("click", () => {
     outputIsEmpty = true;
+    decimalFlag = true;
     output.textContent = "0";
-    outputPrev.textContent = "0";
-    stack = [];
+    outputPrev.textContent = "";
+    expression = [];
 });
 
 // Event listener for deleting digit in output
 backspaceBtn.addEventListener("click", () => {
-    if (output.textContent.length !== 1) {
-    output.textContent = output.textContent.slice(0, -1); 
-    } else {
-        output.textContent = "0";
+    if (output.textContent != "Infinity") {
+        (output.textContent.length !== 1) 
+            ? output.textContent = output.textContent.slice(0, -1) 
+            : output.textContent = "0";
     }
 });
 
@@ -44,47 +45,52 @@ numbers.forEach(number => {
     });
 });
 
-let dotFlag = true;
+// Decimal point
+let decimalFlag = true;
 dotBtn.addEventListener("click", () => {
-    if (dotFlag) {
+    if (decimalFlag) {
         output.textContent += ".";
-        dotFlag = false;
+        decimalFlag = false;
     }
 });
 
 operators.forEach(operator => {
     operator.addEventListener("click", (e) => {
-        if (stack.length == 0) {
+        if (expression.length == 0) {
             outputIsEmpty = true;
-            dotFlag = true;
-            stack.push(parseFloat(output.textContent));
-            stack.push(e.target.textContent);
-            outputPrev.textContent = `${stack[0]} ${stack[1]}`;
+            decimalFlag = true;
+            expression.push(parseFloat(output.textContent));
+            expression.push(e.target.textContent);
+            outputPrev.textContent = `${expression[0]} ${expression[1]}`;
         } else {
-            stack.push(parseFloat(output.textContent));
-            stack[0] = operate(stack[0], stack[1], stack[2]);
-            handleBigNum(stack[0]);
-            stack[1] = e.target.textContent;
-            stack.pop();
+            expression.push(parseFloat(output.textContent));
+            expression[0] = operate(expression[0], expression[1], expression[2]);
+            handleBigNum(expression[0]);
+            expression[1] = e.target.textContent;
+            expression.pop();
             outputIsEmpty = true;
-            dotFlag = true;
-            outputPrev.textContent = `${stack[0]} ${stack[1]}`;    
+            decimalFlag = true;
+            outputPrev.textContent = `${expression[0]} ${expression[1]}`;    
         }
     });
 });
 
 equalBtn.addEventListener("click", () => {
-    if (stack.length > 1) {
-        stack.push(parseFloat(output.textContent));
-        outputPrev.textContent = `${stack[0]} ${stack[1]} ${stack[2]} =`; 
-        stack[0] = operate(stack[0], stack[1], stack[2]);
-        handleBigNum(stack[0]);
-        stack = [];
+    if (expression.length > 1) {
+        expression.push(parseFloat(output.textContent));
+        outputPrev.textContent = `${expression[0]} ${expression[1]} ${expression[2]} =`; 
+        expression[0] = operate(expression[0], expression[1], expression[2]);
+        handleBigNum(expression[0]);
+        expression = [];
     }
 });
 
 function handleBigNum(num) {
     (num < 99999999999) ? output.textContent = num : output.textContent = "Infinity";
+}
+
+function round(num) {
+    let rounded = Math.round((num + Number.EPSILON) * 100) / 100
 }
 
 function operate(a, operator, b) {
