@@ -1,16 +1,15 @@
 /* TODO
     Keyboard support
     Max display num and rounding
-    Fix inputting decimal for the first time
+    Fix decimal point after hitting backspace
 */
-
 const output = document.querySelector("#output");
 const outputPreview = document.querySelector("#output-preview");
 const clearBtn = document.querySelector("#clear-btn");
 const backspaceBtn = document.querySelector("#backspace-btn");
 const operators = document.querySelectorAll(".operators");
 const numbers = document.querySelectorAll(".numbers");
-const dotBtn = document.querySelector("#dot-btn");
+const decimalBtn = document.querySelector("#dot-btn");
 const equalBtn = document.querySelector("#equal-btn");
 // expression to hold order of operation
 let expression = [];
@@ -51,7 +50,7 @@ numbers.forEach(number => {
 
 // Decimal point
 let decimalExists = false;
-dotBtn.addEventListener("click", () => {
+decimalBtn.addEventListener("click", () => {
     if (!decimalExists) {
         output.textContent += ".";
         decimalExists = true;
@@ -69,7 +68,7 @@ operators.forEach(operator => {
         } else {
             expression.push(parseFloat(output.textContent));
             expression[0] = operate(expression[0], expression[1], expression[2]);
-            handleBigNum(expression[0]);
+            handleNum(expression[0]);
             expression[1] = e.target.textContent;
             expression.pop();
             outputIsEmpty = false;
@@ -84,17 +83,19 @@ equalBtn.addEventListener("click", () => {
         expression.push(parseFloat(output.textContent));
         outputPreview.textContent = `${expression[0]} ${expression[1]} ${expression[2]} =`; 
         expression[0] = operate(expression[0], expression[1], expression[2]);
-        handleBigNum(expression[0]);
+        handleNum(expression[0]);
         expression = [];
     }
 });
 
-function handleBigNum(num) {
-    (num < 99999999999) ? output.textContent = num : output.textContent = "Infinity";
-}
+function handleNum(num) {
+    if (num === "Undefined") return output.textContent = "Undefined";
+    if (num < 99999999999) {
 
-function round(num) {
-    let rounded = Math.round((num + Number.EPSILON) * 100) / 100
+        // output.textContent = num;
+    } else {
+        output.textContent = "Infinity";
+    }
 }
 
 function operate(a, operator, b) {
@@ -106,9 +107,19 @@ function operate(a, operator, b) {
         case 'x':
             return parseFloat(a) * parseFloat(b);
         case '÷':
-            if (parseFloat(b) === 0) return ('Cannot divide by zero');
+            if (parseFloat(b) == 0) return "Undefined";
             return parseFloat(a) / parseFloat(b);
-        default:
-            // throw new Error('Invalid operator: &{operation}');
     }
+}
+
+function round(num) {
+    let numToString = num.toString();
+    let decimalPlace = numToString.indexOf('.');
+    
+    if (numToString.length > 11 && decimalPlace != -1) {
+        let newString = numToString.substring(0, 11);
+        let decimalPlaces = 11 - (decimalPlace + 1);
+
+    }
+    return numToString;
 }
