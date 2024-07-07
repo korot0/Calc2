@@ -1,6 +1,5 @@
 /* TODO
     Max display num and rounding
-    Fix decimal point after hitting backspace
     Add suggestion of keydown
 */
 const output = document.querySelector("#output");
@@ -15,7 +14,7 @@ const equalBtn = document.querySelector("#equal-btn");
 let expression = [];
 // Flags
 let outputIsEmpty = true;
-let decimalExists = false;
+
 
 // Keydown listeners
 document.addEventListener("keydown", (event) => {
@@ -55,10 +54,7 @@ equalBtn.addEventListener("click", () => handleEqualsBtn());
 
 // Function to handle numbers
 function handleNumbers(number) {
-    if (outputIsEmpty && decimalExists) {
-        output.textContent += number;
-        outputIsEmpty = false;
-    } else if (outputIsEmpty) {
+    if (outputIsEmpty) {
         output.textContent = number;
         outputIsEmpty = false;
     } else {
@@ -69,7 +65,6 @@ function handleNumbers(number) {
 // Clear button
 function handleClearBtn() {
     outputIsEmpty = true;
-    decimalExists = false;
     output.textContent = "0";
     outputPreview.textContent = "";
     expression = [];
@@ -89,7 +84,9 @@ function handleBackspaceBtn() {
 
 // Decimal point
 function handleDecimalBtn() {
-    if (!decimalExists) output.textContent += ".";
+    if (output.textContent.indexOf(".") == -1) {
+        output.textContent += ".";
+    }
 }
 
 // Equals
@@ -107,7 +104,6 @@ function handleEqualsBtn() {
 function handleOperators(e) {
     if (expression.length == 0) {
         outputIsEmpty = true;
-        decimalExists = false;
         expression.push(parseFloat(output.textContent));
         expression.push(e);
         outputPreview.textContent = `${expression[0]} ${expression[1]}`;
@@ -118,7 +114,6 @@ function handleOperators(e) {
         expression[1] = e;
         expression.pop();
         outputIsEmpty = false;
-        decimalExists = false;
         outputPreview.textContent = `${expression[0]} ${expression[1]}`;    
     }
 }
