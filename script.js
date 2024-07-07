@@ -1,10 +1,11 @@
 /* TODO
     Keyboard support
     Max display num and rounding
+    Fix inputting decimal for the first time
 */
 
 const output = document.querySelector("#output");
-const outputPrev = document.querySelector("#output-preview");
+const outputPreview = document.querySelector("#output-preview");
 const clearBtn = document.querySelector("#clear-btn");
 const backspaceBtn = document.querySelector("#backspace-btn");
 const operators = document.querySelectorAll(".operators");
@@ -17,9 +18,9 @@ let expression = [];
 // Event listener for clearing output
 clearBtn.addEventListener("click", () => {
     outputIsEmpty = true;
-    decimalFlag = true;
+    decimalExists = false;
     output.textContent = "0";
-    outputPrev.textContent = "";
+    outputPreview.textContent = "";
     expression = [];
 });
 
@@ -35,7 +36,10 @@ backspaceBtn.addEventListener("click", () => {
 let outputIsEmpty = true;
 numbers.forEach(number => {
     number.addEventListener("click", () => {
-        if (outputIsEmpty) {
+        if (outputIsEmpty && decimalExists) {
+            output.textContent += number.textContent;
+            outputIsEmpty = false;
+        } else if (outputIsEmpty) {
             output.textContent = "";
             output.textContent += number.textContent;
             outputIsEmpty = false;
@@ -46,11 +50,11 @@ numbers.forEach(number => {
 });
 
 // Decimal point
-let decimalFlag = true;
+let decimalExists = false;
 dotBtn.addEventListener("click", () => {
-    if (decimalFlag) {
+    if (!decimalExists) {
         output.textContent += ".";
-        decimalFlag = false;
+        decimalExists = true;
     }
 });
 
@@ -58,19 +62,19 @@ operators.forEach(operator => {
     operator.addEventListener("click", (e) => {
         if (expression.length == 0) {
             outputIsEmpty = true;
-            decimalFlag = true;
+            decimalExists = false;
             expression.push(parseFloat(output.textContent));
             expression.push(e.target.textContent);
-            outputPrev.textContent = `${expression[0]} ${expression[1]}`;
+            outputPreview.textContent = `${expression[0]} ${expression[1]}`;
         } else {
             expression.push(parseFloat(output.textContent));
             expression[0] = operate(expression[0], expression[1], expression[2]);
             handleBigNum(expression[0]);
             expression[1] = e.target.textContent;
             expression.pop();
-            outputIsEmpty = true;
-            decimalFlag = true;
-            outputPrev.textContent = `${expression[0]} ${expression[1]}`;    
+            outputIsEmpty = false;
+            decimalExists = false;
+            outputPreview.textContent = `${expression[0]} ${expression[1]}`;    
         }
     });
 });
@@ -78,7 +82,7 @@ operators.forEach(operator => {
 equalBtn.addEventListener("click", () => {
     if (expression.length > 1) {
         expression.push(parseFloat(output.textContent));
-        outputPrev.textContent = `${expression[0]} ${expression[1]} ${expression[2]} =`; 
+        outputPreview.textContent = `${expression[0]} ${expression[1]} ${expression[2]} =`; 
         expression[0] = operate(expression[0], expression[1], expression[2]);
         handleBigNum(expression[0]);
         expression = [];
