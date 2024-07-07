@@ -15,7 +15,6 @@ let expression = [];
 // Flags
 let outputIsEmpty = true;
 
-
 // Keydown listeners
 document.addEventListener("keydown", (event) => {
     // Check if the key pressed is a number key (0-9)
