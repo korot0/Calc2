@@ -36,11 +36,11 @@ document.addEventListener("keydown", (event) => {
     }
 });
 
-// Numbers listener
+// Number listener
 numbers.forEach(number => {
     number.addEventListener("click", () => handleNumbers(number.textContent));
 });
-// Operators listener
+// Operator listener
 operators.forEach(operator => {
     operator.addEventListener("click", (e) => handleOperators(e.target.textContent));
 });
@@ -53,7 +53,7 @@ decimalBtn.addEventListener("click", () => handleDecimalBtn());
 // Equals button listener
 equalBtn.addEventListener("click", () => handleEqualsBtn());
 
-// Function to handle both button clicks and keydown
+// Function to handle numbers
 function handleNumbers(number) {
     if (outputIsEmpty && decimalExists) {
         output.textContent += number;
@@ -66,7 +66,7 @@ function handleNumbers(number) {
     }
 }
 
-// Clear button function
+// Clear button
 function handleClearBtn() {
     outputIsEmpty = true;
     decimalExists = false;
@@ -75,24 +75,24 @@ function handleClearBtn() {
     expression = [];
 }
 
-// Backspace button function
+// Backspace
 function handleBackspaceBtn() {
     if (output.textContent != "Infinity") {
-        (output.textContent.length !== 1) 
-            ? output.textContent = output.textContent.slice(0, -1) 
-            : output.textContent = "0";
+        if (output.textContent.length !== 1) { 
+            output.textContent = output.textContent.slice(0, -1) 
+        } else {
+            output.textContent = "0";
+            outputIsEmpty = true;
+        }
     }
 }
 
-// Decimal button function
+// Decimal point
 function handleDecimalBtn() {
-    if (!decimalExists) {
-        output.textContent += ".";
-        decimalExists = true;
-    }
+    if (!decimalExists) output.textContent += ".";
 }
 
-// Equals button function
+// Equals
 function handleEqualsBtn() {
     if (expression.length > 1) {
         expression.push(parseFloat(output.textContent));
@@ -103,7 +103,7 @@ function handleEqualsBtn() {
     }
 }
 
-// Operator buttons function
+// Function to handle operators
 function handleOperators(e) {
     if (expression.length == 0) {
         outputIsEmpty = true;
