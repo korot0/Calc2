@@ -1,6 +1,5 @@
 /* TODO
     Max display num and rounding
-    Add suggestion of keydown
 */
 const output = document.querySelector("#output");
 const outputPreview = document.querySelector("#output-preview");
@@ -53,7 +52,7 @@ equalBtn.addEventListener("click", () => handleEqualsBtn());
 
 // Function to handle numbers
 function handleNumbers(number) {
-    if (outputIsEmpty) {
+    if (outputIsEmpty && output.textContent[1] != ".") {
         output.textContent = number;
         outputIsEmpty = false;
     } else {
