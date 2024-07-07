@@ -8,7 +8,7 @@ This is a simple web-based calculator created as a part of The Odin Project's we
 - **Backspace Functionality**: Remove the last entered digit.
 - **Clear Button**: Reset the calculator to zero.
 - **Decimal Point**: Support for decimal numbers.
-- **Keyboard Support**: _(TODO)_
+- **Keyboard Support**: Able to use keyboard to perform operations
 - **Prevent Overflow**: Handle large numbers gracefully.
 - **Error Handling**: Prevent division by zero.
 
