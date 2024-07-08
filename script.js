@@ -1,6 +1,3 @@
-/* TODO
-    Max display num and rounding
-*/
 const output = document.querySelector("#output");
 const outputPreview = document.querySelector("#output-preview");
 const clearBtn = document.querySelector("#clear-btn");
@@ -11,7 +8,7 @@ const decimalBtn = document.querySelector("#dot-btn");
 const equalBtn = document.querySelector("#equal-btn");
 // Expression to hold order of operation
 let expression = [];
-// Flags
+// Switch to check if the output currently has a number
 let outputIsEmpty = true;
 
 // Keydown listeners
@@ -56,7 +53,9 @@ function handleNumbers(number) {
         output.textContent = number;
         outputIsEmpty = false;
     } else {
-        output.textContent += number;
+        if (output.textContent.length < 10) {
+            output.textContent += number;
+        }
     }
 }
 
@@ -82,9 +81,7 @@ function handleBackspaceBtn() {
 
 // Decimal point
 function handleDecimalBtn() {
-    if (output.textContent.indexOf(".") == -1) {
-        output.textContent += ".";
-    }
+    if (output.textContent.indexOf(".") == -1) output.textContent += ".";
 }
 
 // Equals
@@ -93,7 +90,6 @@ function handleEqualsBtn() {
         expression.push(parseFloat(output.textContent));
         outputPreview.textContent = `${expression[0]} ${expression[1]} ${expression[2]} =`; 
         expression[0] = operate(expression[0], expression[1], expression[2]);
-        handleNum(expression[0]);
         expression = [];
     }
 }
@@ -108,7 +104,6 @@ function handleOperators(e) {
     } else {
         expression.push(parseFloat(output.textContent));
         expression[0] = operate(expression[0], expression[1], expression[2]);
-        handleNum(expression[0]);
         expression[1] = e;
         expression.pop();
         outputIsEmpty = false;
@@ -116,32 +111,24 @@ function handleOperators(e) {
     }
 }
 
-// *********************
-
-function handleNum(num) {
-    if (num === "Undefined") return output.textContent = "Undefined";
-    if (num < 99999999999) {
-
-        // output.textContent = num;
-    } else {
-        output.textContent = "Infinity";
-    }
-}
-
 function operate(a, operator, b) {
+    let answer;
     switch (operator) {
         case '+':
-            return parseFloat(a) + parseFloat(b);
+            answer = parseFloat(a) + parseFloat(b);
+            break;
         case '-':
-            return parseFloat(a) - parseFloat(b);
-        case 'x':
-            return parseFloat(a) * parseFloat(b);
-        case '÷':
-            if (parseFloat(b) == 0) return "Undefined";
-            return parseFloat(a) / parseFloat(b);
+            answer = parseFloat(a) - parseFloat(b);
+            break;
+        case '*':
+            answer = parseFloat(a) * parseFloat(b);
+            break;
+        case '/':
+            if (parseFloat(b) == 0) return output.textContent = "Undefined";
+            answer = parseFloat(a) / parseFloat(b);
+            break;
     }
-}
-
-function round(num) {
-
+    return (answer < 99999999999) 
+        ? output.textContent = Math.round((answer + Number.EPSILON) * 10000) / 10000
+        : output.textContent = "Infinity";
 }

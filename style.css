@@ -15,8 +15,8 @@ html, body {
 }
 
 #help-container {
-    width: 450px;
-    height: 200px;
+    width: 350px;
+    height: 220px;
     border-radius: 10px;
     margin: 0 auto;
     background-color: #222;
@@ -28,7 +28,7 @@ h3 {
 }
 
 li {
-    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 #calculator {
@@ -54,7 +54,7 @@ li {
 }
 
 #output {
-    font-size: 65px;
+    font-size: 50px;
     margin-right: 12px;
 }
 
@@ -76,7 +76,7 @@ button {
     border-radius: 5px;
     transition: transform .1s;
     flex: 1;
-    font-size: 30px;
+    font-size: 27px;
 }
 
 button:hover {
