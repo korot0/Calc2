@@ -26,7 +26,11 @@ document.addEventListener("keydown", (event) => {
         event.preventDefault();
         handleEqualsBtn();
     } else if (event.key === "+" || event.key === "-" || event.key === "*" || event.key === "/") {
-        handleOperators(event.key);
+        if (event.key == '*') {
+            handleOperators('x');
+        } else {
+            handleOperators(event.key);
+        }
     }
 });
 
@@ -49,13 +53,11 @@ equalBtn.addEventListener("click", () => handleEqualsBtn());
 
 // Function to handle numbers
 function handleNumbers(number) {
-    if (outputIsEmpty && output.textContent[1] != ".") {
+    if (outputIsEmpty) {
         output.textContent = number;
         outputIsEmpty = false;
-    } else {
-        if (output.textContent.length < 10) {
-            output.textContent += number;
-        }
+    } else if (output.textContent.length < 10) {
+        output.textContent += number;
     }
 }
 
@@ -81,7 +83,13 @@ function handleBackspaceBtn() {
 
 // Decimal point
 function handleDecimalBtn() {
-    if (output.textContent.indexOf(".") == -1) output.textContent += ".";
+    if (output.textContent.indexOf(".") == -1) {
+        output.textContent += ".";
+        outputIsEmpty = false;
+    } else if (expression.length == 2) {
+        output.textContent = "0."
+        outputIsEmpty = false;
+    }
 }
 
 // Equals
@@ -91,6 +99,7 @@ function handleEqualsBtn() {
         outputPreview.textContent = `${expression[0]} ${expression[1]} ${expression[2]} =`; 
         expression[0] = operate(expression[0], expression[1], expression[2]);
         expression = [];
+        outputIsEmpty = false;
     }
 }
 
@@ -106,7 +115,7 @@ function handleOperators(e) {
         expression[0] = operate(expression[0], expression[1], expression[2]);
         expression[1] = e;
         expression.pop();
-        outputIsEmpty = false;
+        outputIsEmpty = true;
         outputPreview.textContent = `${expression[0]} ${expression[1]}`;    
     }
 }
@@ -120,7 +129,7 @@ function operate(a, operator, b) {
         case '-':
             answer = parseFloat(a) - parseFloat(b);
             break;
-        case '*':
+        case 'x':
             answer = parseFloat(a) * parseFloat(b);
             break;
         case '/':
