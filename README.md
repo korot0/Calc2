@@ -2,6 +2,11 @@
 
 This is a simple web-based calculator created as a part of The Odin Project's web development curriculum.
 
+## Technologies
+- **JavaScript**
+- **CSS**
+- **HTML**
+
 ## Features
 
 - **Basic Arithmetic Operations**: Addition, Subtraction, Multiplication, Division.
