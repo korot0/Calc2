@@ -101,7 +101,7 @@ function handleEqualsBtn() {
         outputPreview.textContent = `${expression[0]} ${expression[1]} ${expression[2]} =`; 
         expression[0] = operate(expression[0], expression[1], expression[2]);
         expression = [];
-        outputIsEmpty = false;
+        outputIsEmpty = true;
     }
 }
 
@@ -136,7 +136,7 @@ function operate(a, operator, b) {
             answer = parseFloat(a) * parseFloat(b);
             break;
         case '/':
-            if (parseFloat(b) == 0) return output.textContent = "Undefined";
+            if (parseFloat(b) == 0) return output.textContent = "Cannot divide by zero";
             answer = parseFloat(a) / parseFloat(b);
             break;
     }
