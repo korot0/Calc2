@@ -61,6 +61,7 @@ function handleNumbers(number) {
     } else if (output.textContent.length < 10) {
         output.textContent += number;
     }
+    operatorSwitch = true;
 }
 
 // Function to handle clear button
@@ -87,11 +88,12 @@ function handleBackspaceBtn() {
 function handleDecimalBtn() {
     if (output.textContent.indexOf(".") == -1) {
         output.textContent += "."; // Append decimal if not present
-        outputIsEmpty = false;
+        // outputIsEmpty = false;
     } else if (expression.length == 2) {
         output.textContent = "0." // Start new number with decimal if operator exists
-        outputIsEmpty = false;
+        // outputIsEmpty = false;
     }
+    outputIsEmpty = false;
 }
 
 // Function to handle equals
@@ -105,21 +107,29 @@ function handleEqualsBtn() {
     }
 }
 
+// MOVE TO TOP
+let operatorSwitch = true;
+
 // Function to handle operators
 function handleOperators(e) {
     if (expression.length == 0) {
-        outputIsEmpty = true;
+        // outputIsEmpty = true;
         expression.push(parseFloat(output.textContent)); // Push current output into expression
         expression.push(e); // Push respective operator into expression
-        outputPreview.textContent = `${expression[0]} ${expression[1]}`;
-    } else {
+        // outputPreview.textContent = `${expression[0]} ${expression[1]}`;
+        // operatorSwitch = false;
+    } else if (operatorSwitch) {
         expression.push(parseFloat(output.textContent));
-        expression[0] = operate(expression[0], expression[1], expression[2]); // Calculate for future operations without relying on equal button
+        expression[0] = operate(expression[0], expression[1], expression[2]); // Calculate 
         expression[1] = e;
+        // outputIsEmpty = true;
+        // outputPreview.textContent = `${expression[0]} ${expression[1]}`;
         expression.pop();
-        outputIsEmpty = true;
-        outputPreview.textContent = `${expression[0]} ${expression[1]}`;    
+        // operatorSwitch = false;
     }
+    outputPreview.textContent = `${expression[0]} ${expression[1]}`; 
+    outputIsEmpty = true;
+    operatorSwitch = false;
 }
 
 // Function to perform arithmetic
