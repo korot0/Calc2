@@ -12,6 +12,8 @@ const equalBtn = document.querySelector("#equal-btn");
 let expression = [];
 // Switch to check if the output currently has a number
 let outputIsEmpty = true;
+// Switch to check if operator has been pressed instead of number (prevents wrong operations)
+let operatorSwitch = true;
 
 // Keydown listeners for keyboard input
 document.addEventListener("keydown", (event) => {
@@ -88,10 +90,8 @@ function handleBackspaceBtn() {
 function handleDecimalBtn() {
     if (output.textContent.indexOf(".") == -1) {
         output.textContent += "."; // Append decimal if not present
-        // outputIsEmpty = false;
     } else if (expression.length == 2) {
         output.textContent = "0." // Start new number with decimal if operator exists
-        // outputIsEmpty = false;
     }
     outputIsEmpty = false;
 }
@@ -107,25 +107,18 @@ function handleEqualsBtn() {
     }
 }
 
-// MOVE TO TOP
-let operatorSwitch = true;
-
 // Function to handle operators
 function handleOperators(e) {
     if (expression.length == 0) {
-        // outputIsEmpty = true;
         expression.push(parseFloat(output.textContent)); // Push current output into expression
         expression.push(e); // Push respective operator into expression
-        // outputPreview.textContent = `${expression[0]} ${expression[1]}`;
-        // operatorSwitch = false;
     } else if (operatorSwitch) {
         expression.push(parseFloat(output.textContent));
         expression[0] = operate(expression[0], expression[1], expression[2]); // Calculate 
         expression[1] = e;
-        // outputIsEmpty = true;
-        // outputPreview.textContent = `${expression[0]} ${expression[1]}`;
         expression.pop();
-        // operatorSwitch = false;
+    } else {
+        expression[1] = e;
     }
     outputPreview.textContent = `${expression[0]} ${expression[1]}`; 
     outputIsEmpty = true;
